@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  api:
+    build: /api
+    container_name: ${APP_NAME}-api
+  db:
+    build: /db
+    container_name: ${APP_NAME}-db
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+volumes:
+  postgres:
