@@ -1,13 +1,28 @@
 version: '3.8'
 services:
   api:
-    build: /api
+    build: ./api
+    command: bash -c "rm -f tmp.pids.server.pid && bundle exec rails s -p 3001 -b '0.0.0.0'"
     container_name: ${APP_NAME}-api
+    volumes:
+      - ./api:/api
+      - bundler_gems:/usr/local/bundle/
+    ports:
+      - "3001:3001"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    depends_on:
+      - db
   db:
-    build: /db
+    build: ./db/
     container_name: ${APP_NAME}-db
+    user: postgres
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
       - postgres:/var/lib/postgresql/data
-
 volumes:
   postgres:
+  bundler_gems:
